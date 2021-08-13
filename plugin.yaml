@@ -1,0 +1,7 @@
+name: "FLASKINTRODUCTION"
+version: "0.1.0"
+usage: "Proxy app for containers"
+description: "Avoid containers overwhelming by throttle proxy. "
+ignoreFlags: false
+command: "python3 app.py --sleep-interval 10 --kube-api https://rancher.valensas.com/k8s/clusters/c-dvgp5"
+#"echo The plugin is located in: \"$HELM_PLUGIN_DIR\" and its name is: \"$HELM_PLUGIN_NAME\""
