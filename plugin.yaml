@@ -4,5 +4,3 @@ usage: "Proxy app for containers"
 description: "Avoid containers overwhelming by throttle proxy. "
 ignoreFlags: false
 command: "$HELM_PLUGIN_DIR/test.sh"
-#"echo The plugin is located in: \"$HELM_PLUGIN_DIR\" and its name is: \"$HELM_PLUGIN_NAME\""
-

@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 from flask import request
 import time
 import requests
@@ -6,6 +7,7 @@ import re
 from optparse import OptionParser
 
 app = Flask(__name__)
+
 parser = OptionParser()
 parser.add_option(
     "--sleep-interval",
@@ -21,6 +23,7 @@ parser.add_option(
     default="",
     help="Enter an url",
 )
+
 (options, args) = parser.parse_args()
 kube_api_URL = options.kube_api
 time_interval = options.interval
@@ -41,23 +44,22 @@ def check_for_throttle(path):
     return is_method_type_matched and is_regex_matched and not is_dry_run
 
 
+executor = ThreadPoolExecutor(1)
+
 @app.route(
     "/", defaults={"path": ""}, methods=["POST", "GET", "PUT", "PATCH", "DELETE"]
 )
 @app.route("/<string:path>", methods=["POST", "GET", "PUT", "PATCH", "DELETE"])
 @app.route("/<path:path>", methods=["POST", "GET", "PUT", "PATCH", "DELETE"])
 def _proxy(path):
-    print("?????????????????????????????????????????")
     global last_write_request_throttled_timestamp
     if check_for_throttle(path=path):
         if last_write_request_throttled_timestamp is not None:
-            print("=================================")
             milli_sec = int(round(time.time() * 1000))
             timeDif = milli_sec - last_write_request_throttled_timestamp
             dif = (time_interval * 1000 - timeDif) / 1000.0
             if dif > 0:
-                time.sleep(dif)
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!:::: ", dif)
+                executor.submit(time.sleep, (dif)).result()
         last_write_request_throttled_timestamp = int(
             round(time.time() * 1000))
     resp = requests.request(
@@ -86,4 +88,4 @@ def _proxy(path):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, ssl_context="adhoc")
+    app.run(debug=False, ssl_context="adhoc")

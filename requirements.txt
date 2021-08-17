@@ -1,3 +1,4 @@
 flask==2.0.1
 requests==2.26.0
 pyOpenSSL==20.0.1
+pyyaml==5.4.1
