@@ -11,7 +11,7 @@ parser.add_option(
     "--sleep-interval",
     dest="interval",
     type="int",
-    default=5,
+    default=10,
     help="Enter a time-interval",
 )
 parser.add_option(
@@ -47,14 +47,17 @@ def check_for_throttle(path):
 @app.route("/<string:path>", methods=["POST", "GET", "PUT", "PATCH", "DELETE"])
 @app.route("/<path:path>", methods=["POST", "GET", "PUT", "PATCH", "DELETE"])
 def _proxy(path):
+    print("?????????????????????????????????????????")
     global last_write_request_throttled_timestamp
     if check_for_throttle(path=path):
         if last_write_request_throttled_timestamp is not None:
+            print("=================================")
             milli_sec = int(round(time.time() * 1000))
             timeDif = milli_sec - last_write_request_throttled_timestamp
             dif = (time_interval * 1000 - timeDif) / 1000.0
             if dif > 0:
                 time.sleep(dif)
+                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!:::: ", dif)
         last_write_request_throttled_timestamp = int(
             round(time.time() * 1000))
     resp = requests.request(
