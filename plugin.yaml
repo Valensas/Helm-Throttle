@@ -4,3 +4,6 @@ usage: "Proxy app for containers"
 description: "Avoid containers overwhelming by throttle proxy. "
 ignoreFlags: false
 command: "$HELM_PLUGIN_DIR/test.sh"
+hooks:
+  install: "virtualenv $HELM_PLUGIN_DIR; source $HELM_PLUGIN_DIR/bin/activate; pip install -r $HELM_PLUGIN_DIR/requirements.txt;"
+  update: "virtualenv $HELM_PLUGIN_DIR; source $HELM_PLUGIN_DIR/bin/activate; pip install -r $HELM_PLUGIN_DIR/requirements.txt;"

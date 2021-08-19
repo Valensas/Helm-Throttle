@@ -29,3 +29,4 @@ OUT="$(mktemp)"
 python3 $HELM_PLUGIN_DIR/config_script.py --kube-config="${KUBECONFIG}"  --kube-context="${KUBECONTEXT}" --temp-config="${OUT}"
 
 HELM_KUBEAPISERVER=https://localhost:5000 helm $* --kubeconfig="${OUT}"
+
