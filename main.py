@@ -4,30 +4,22 @@ import time
 import requests
 from flask import Flask, Response
 import re
-from optparse import OptionParser
+import os
+
 
 app = Flask(__name__)
 
-parser = OptionParser()
-parser.add_option(
-    "--sleep-interval",
-    dest="interval",
-    type="int",
-    default=10,
-    help="Enter a time-interval",
-)
-parser.add_option(
-    "--kube-api",
-    dest="kube_api",
-    type="str",
-    default="",
-    help="Enter an url",
-)
 
-(options, args) = parser.parse_args()
-kube_api_URL = options.kube_api
-time_interval = options.interval
+kube_api_URL = os.environ.get("KUBEAPI")
+time_interval = os.environ.get("TIME_INTERVAL")
+if kube_api_URL is None:
+    raise Exception("URL Not Given!")
+if time_interval is None:
+    time_interval = 10
+else:
+    time_interval = int(time_interval)
 last_write_request_throttled_timestamp = None
+
 regex_list = [
     "^apis\/apps\/v1\/namespaces\/[^\/]+\/statefulsets(\/[^\/]+)?$",
     "^apis\/apps\/v1\/namespaces\/[^\/]+\/deployments(\/[^\/]+)?$",
@@ -45,6 +37,7 @@ def check_for_throttle(path):
 
 
 executor = ThreadPoolExecutor(1)
+
 
 @app.route(
     "/", defaults={"path": ""}, methods=["POST", "GET", "PUT", "PATCH", "DELETE"]
