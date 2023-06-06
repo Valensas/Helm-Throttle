@@ -1,7 +1,7 @@
 name: "throttle"
-version: "0.1.0"
-usage: "Proxy app for containers"
-description: "Avoid containers overwhelming by throttle proxy. "
+version: "1.0.0"
+usage: "throttle your deployments"
+description: "A Helm plugin to throttle controllers during upgrades."
 ignoreFlags: false
 command: "$HELM_PLUGIN_DIR/helm-throttle.sh"
 hooks:
